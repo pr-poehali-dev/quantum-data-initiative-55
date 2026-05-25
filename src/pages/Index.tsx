@@ -159,18 +159,18 @@ export default function Index() {
           <div className="mx-auto max-w-4xl">
             <div className="text-center px-0 leading-5">
               <h1 className="mb-8 text-balance text-5xl tracking-tight text-white [text-shadow:_0_4px_20px_rgb(0_0_0_/_60%)] md:text-6xl lg:text-8xl">
-                <span className="font-open-sans-custom not-italic">Почувствуй.</span>{" "}
-                <span className="font-serif italic">Собери.</span>{" "}
-                <span className="font-open-sans-custom not-italic">Вдохновись.</span>
+                <span className="font-open-sans-custom not-italic">Образы.</span>{" "}
+                <span className="font-serif italic">Звуки.</span>{" "}
+                <span className="font-open-sans-custom not-italic">Атмосфера.</span>
               </h1>
 
               <p className="mb-8 mx-auto max-w-2xl text-pretty leading-relaxed text-gray-300 [text-shadow:_0_2px_10px_rgb(0_0_0_/_50%)] font-thin font-open-sans-custom tracking-wide leading-7 text-xl">
-                платформа для тех, кто мыслит образами — собирай визуальные референсы,{" "}
-                <span className="font-serif italic">передавай настроение</span> и находи вдохновение вместе с сообществом чувствующих
+                введи идею, эмоцию или сцену — ИИ соберёт{" "}
+                <span className="font-serif italic">живой мудборд</span>, который движется, звучит и дышит вместе с тобой
               </p>
 
               <div className="flex justify-center">
-                <ShinyButton className="px-8 py-3 text-base">войти в поток</ShinyButton>
+                <ShinyButton className="px-8 py-3 text-base">создать мудборд</ShinyButton>
               </div>
             </div>
           </div>
@@ -233,7 +233,7 @@ export default function Index() {
                 О нас
               </h1>
               <p className="text-gray-300 mt-4 text-sm md:text-base font-open-sans-custom [text-shadow:_0_2px_10px_rgb(0_0_0_/_50%)]">
-                Мы создали Moodboard для тех, кто чувствует мир глубже и ищет красоту в деталях.
+                Мы создали Доску настроения для тех, кто строит атмосферу — и хочет, чтобы команда её почувствовала.
               </p>
             </div>
             <AboutQuote />
@@ -257,8 +257,8 @@ export default function Index() {
 
           <div className="relative z-10 mx-auto w-full max-w-5xl mt-[5vh]">
             <ContactCard
-              title="Присоединиться"
-              description="Хочешь стать частью сообщества? Напиши нам — расскажем о платформе, ответим на вопросы и поможем начать путь вдохновения."
+              title="Войти в поток"
+              description="Режиссёр, дизайнер, арт-директор или просто чувствующий человек — напиши нам, и мы дадим ранний доступ к платформе."
               contactInfo={[
                 {
                   icon: MailIcon,
