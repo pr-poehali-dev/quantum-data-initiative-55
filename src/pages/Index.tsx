@@ -3,6 +3,7 @@ import { FloatingNavbar } from "@/components/FloatingNavbar"
 import { ShinyButton } from "@/components/ui/shiny-button"
 import { Feature } from "@/components/ui/feature-with-advantages"
 import { MoodboardDemo } from "@/components/ui/moodboard-demo"
+import { DashboardSlide } from "@/components/ui/dashboard-slide"
 import { ContactCard } from "@/components/ui/contact-card"
 import { AboutQuote } from "@/components/ui/about-quote"
 import { Input } from "@/components/ui/input"
@@ -16,6 +17,7 @@ import { useEffect, useRef } from "react"
 export default function Index() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const demoSectionRef = useRef<HTMLDivElement>(null)
+  const dashboardSectionRef = useRef<HTMLDivElement>(null)
   const aboutSectionRef = useRef<HTMLDivElement>(null)
   const contactSectionRef = useRef<HTMLDivElement>(null)
 
@@ -29,14 +31,13 @@ export default function Index() {
       const containerWidth = scrollContainer.offsetWidth
       const currentSection = Math.round(currentScroll / containerWidth)
 
+      // section 2 — demo
       if (currentSection === 2 && demoSectionRef.current) {
         const sec = demoSectionRef.current
         const isAtTop = sec.scrollTop === 0
         const isAtBottom = sec.scrollTop + sec.clientHeight >= sec.scrollHeight - 1
-
         if (delta > 0 && !isAtBottom) return
         if (delta < 0 && !isAtTop) return
-
         if (delta < 0 && isAtTop) {
           e.preventDefault()
           scrollContainer.scrollTo({ left: 1 * containerWidth, behavior: "smooth" })
@@ -49,14 +50,13 @@ export default function Index() {
         }
       }
 
-      if (currentSection === 3 && aboutSectionRef.current) {
-        const sec = aboutSectionRef.current
+      // section 3 — dashboard
+      if (currentSection === 3 && dashboardSectionRef.current) {
+        const sec = dashboardSectionRef.current
         const isAtTop = sec.scrollTop === 0
         const isAtBottom = sec.scrollTop + sec.clientHeight >= sec.scrollHeight - 1
-
         if (delta > 0 && !isAtBottom) return
         if (delta < 0 && !isAtTop) return
-
         if (delta < 0 && isAtTop) {
           e.preventDefault()
           scrollContainer.scrollTo({ left: 2 * containerWidth, behavior: "smooth" })
@@ -69,17 +69,35 @@ export default function Index() {
         }
       }
 
-      if (currentSection === 4 && contactSectionRef.current) {
-        const sec = contactSectionRef.current
+      // section 4 — about
+      if (currentSection === 4 && aboutSectionRef.current) {
+        const sec = aboutSectionRef.current
         const isAtTop = sec.scrollTop === 0
         const isAtBottom = sec.scrollTop + sec.clientHeight >= sec.scrollHeight - 1
-
         if (delta > 0 && !isAtBottom) return
         if (delta < 0 && !isAtTop) return
-
         if (delta < 0 && isAtTop) {
           e.preventDefault()
           scrollContainer.scrollTo({ left: 3 * containerWidth, behavior: "smooth" })
+          return
+        }
+        if (delta > 0 && isAtBottom) {
+          e.preventDefault()
+          scrollContainer.scrollTo({ left: 5 * containerWidth, behavior: "smooth" })
+          return
+        }
+      }
+
+      // section 5 — contact
+      if (currentSection === 5 && contactSectionRef.current) {
+        const sec = contactSectionRef.current
+        const isAtTop = sec.scrollTop === 0
+        const isAtBottom = sec.scrollTop + sec.clientHeight >= sec.scrollHeight - 1
+        if (delta > 0 && !isAtBottom) return
+        if (delta < 0 && !isAtTop) return
+        if (delta < 0 && isAtTop) {
+          e.preventDefault()
+          scrollContainer.scrollTo({ left: 4 * containerWidth, behavior: "smooth" })
           return
         }
         if (delta > 0 && isAtBottom) {
@@ -93,7 +111,7 @@ export default function Index() {
       if (Math.abs(delta) > 10) {
         let targetSection = currentSection
         if (delta > 0) {
-          targetSection = Math.min(currentSection + 1, 4)
+          targetSection = Math.min(currentSection + 1, 5)
         } else {
           targetSection = Math.max(currentSection - 1, 0)
         }
@@ -108,9 +126,7 @@ export default function Index() {
   return (
     <main className="relative h-screen overflow-hidden">
       <LiquidMetalBackground />
-
       <div className="fixed inset-0 z-[5] bg-black/50" />
-
       <FloatingNavbar />
 
       <div
@@ -127,12 +143,10 @@ export default function Index() {
                 <span className="font-serif italic">Звуки.</span>{" "}
                 <span className="font-open-sans-custom not-italic">Атмосфера.</span>
               </h1>
-
               <p className="mb-8 mx-auto max-w-2xl text-pretty leading-relaxed text-gray-300 [text-shadow:_0_2px_10px_rgb(0_0_0_/_50%)] font-thin font-open-sans-custom tracking-wide leading-7 text-xl">
                 введи идею, эмоцию или сцену — ИИ соберёт{" "}
                 <span className="font-serif italic">живой мудборд</span>, который движется, звучит и дышит вместе с тобой
               </p>
-
               <div className="flex justify-center">
                 <ShinyButton className="px-8 py-3 text-base">создать мудборд</ShinyButton>
               </div>
@@ -159,8 +173,7 @@ export default function Index() {
             className={cn(
               "absolute inset-0 z-0 size-full pointer-events-none",
               "bg-[radial-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)]",
-              "bg-[size:12px_12px]",
-              "opacity-40",
+              "bg-[size:12px_12px] opacity-40",
             )}
           />
           <div className="relative z-10 w-full">
@@ -168,7 +181,27 @@ export default function Index() {
           </div>
         </section>
 
-        {/* 3 — About */}
+        {/* 3 — Dashboard */}
+        <section
+          id="dashboard"
+          ref={dashboardSectionRef}
+          className="relative min-w-full snap-start overflow-y-auto px-4 pt-24 pb-20 hide-scrollbar flex items-start justify-center"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          <div
+            aria-hidden="true"
+            className={cn(
+              "absolute inset-0 z-0 size-full pointer-events-none",
+              "bg-[radial-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)]",
+              "bg-[size:12px_12px] opacity-40",
+            )}
+          />
+          <div className="relative z-10 w-full">
+            <DashboardSlide />
+          </div>
+        </section>
+
+        {/* 4 — About */}
         <section
           id="about"
           ref={aboutSectionRef}
@@ -180,11 +213,9 @@ export default function Index() {
             className={cn(
               "absolute inset-0 z-0 size-full pointer-events-none",
               "bg-[radial-gradient(rgba(255,255,255,0.1)_1px,transparent_1px)]",
-              "bg-[size:12px_12px]",
-              "opacity-30",
+              "bg-[size:12px_12px] opacity-30",
             )}
           />
-
           <div className="relative z-10 mx-auto w-full max-w-7xl">
             <div className="mx-auto mb-10 max-w-2xl text-center">
               <h1 className="text-4xl font-extrabold tracking-tight lg:text-6xl text-white [text-shadow:_0_4px_20px_rgb(0_0_0_/_60%)] font-open-sans-custom">
@@ -198,7 +229,7 @@ export default function Index() {
           </div>
         </section>
 
-        {/* 4 — Contact */}
+        {/* 5 — Contact */}
         <section
           id="contact"
           ref={contactSectionRef}
@@ -209,72 +240,37 @@ export default function Index() {
             className={cn(
               "absolute inset-0 z-0 size-full pointer-events-none",
               "bg-[radial-gradient(rgba(255,255,255,0.1)_1px,transparent_1px)]",
-              "bg-[size:12px_12px]",
-              "opacity-30",
+              "bg-[size:12px_12px] opacity-30",
             )}
           />
-
           <div className="relative z-10 mx-auto w-full max-w-5xl mt-[5vh]">
             <ContactCard
               title="Войти в поток"
               description="Режиссёр, дизайнер, арт-директор или просто чувствующий человек — напиши нам, и мы дадим ранний доступ к платформе."
               contactInfo={[
-                {
-                  icon: MailIcon,
-                  label: "Почта",
-                  value: "hello@moodboard.app",
-                },
-                {
-                  icon: PhoneIcon,
-                  label: "Telegram",
-                  value: "@moodboard_app",
-                },
-                {
-                  icon: MapPinIcon,
-                  label: "Сообщество",
-                  value: "Онлайн, везде",
-                  className: "col-span-2",
-                },
+                { icon: MailIcon, label: "Почта", value: "hello@moodboard.app" },
+                { icon: PhoneIcon, label: "Telegram", value: "@moodboard_app" },
+                { icon: MapPinIcon, label: "Сообщество", value: "Онлайн, везде", className: "col-span-2" },
               ]}
             >
               <form action="" className="w-full space-y-4">
                 <div className="flex flex-col gap-2">
-                  <Label className="text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] font-open-sans-custom">
-                    Имя
-                  </Label>
-                  <Input
-                    type="text"
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)]"
-                  />
+                  <Label className="text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] font-open-sans-custom">Имя</Label>
+                  <Input type="text" className="bg-white/10 border-white/20 text-white placeholder:text-gray-400" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Label className="text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] font-open-sans-custom">
-                    Email
-                  </Label>
-                  <Input
-                    type="email"
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)]"
-                  />
+                  <Label className="text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] font-open-sans-custom">Email</Label>
+                  <Input type="email" className="bg-white/10 border-white/20 text-white placeholder:text-gray-400" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Label className="text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] font-open-sans-custom">
-                    Телефон
-                  </Label>
-                  <Input
-                    type="tel"
-                    className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)]"
-                  />
+                  <Label className="text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] font-open-sans-custom">Телефон</Label>
+                  <Input type="tel" className="bg-white/10 border-white/20 text-white placeholder:text-gray-400" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Label className="text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] font-open-sans-custom">
-                    Сообщение
-                  </Label>
-                  <Textarea className="bg-white/10 border-white/20 text-white placeholder:text-gray-400 [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)]" />
+                  <Label className="text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] font-open-sans-custom">Сообщение</Label>
+                  <Textarea className="bg-white/10 border-white/20 text-white placeholder:text-gray-400" />
                 </div>
-                <Button
-                  type="submit"
-                  className="w-full bg-white text-black hover:bg-gray-100 font-open-sans-custom"
-                >
+                <Button type="submit" className="w-full bg-white text-black hover:bg-gray-100 font-open-sans-custom">
                   Отправить
                 </Button>
               </form>
