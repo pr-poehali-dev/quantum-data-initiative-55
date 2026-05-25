@@ -36,31 +36,25 @@ export function FloatingNavbar() {
               onClick={() => scrollToSection("features")}
               className="text-sm font-open-sans-custom text-gray-300 transition-colors hover:text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)]"
             >
-              Возможности
+              Изучать
             </button>
             <button
               onClick={() => scrollToSection("demo")}
               className="text-sm font-open-sans-custom text-gray-300 transition-colors hover:text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)]"
             >
-              Демо
+              Создать
             </button>
             <button
               onClick={() => scrollToSection("dashboard")}
               className="text-sm font-open-sans-custom text-gray-300 transition-colors hover:text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)]"
             >
-              Доска
-            </button>
-            <button
-              onClick={() => scrollToSection("about")}
-              className="text-sm font-open-sans-custom text-gray-300 transition-colors hover:text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)]"
-            >
-              О нас
+              Сотрудничать
             </button>
             <button
               onClick={() => scrollToSection("contact")}
               className="text-sm font-open-sans-custom text-gray-300 transition-colors hover:text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)]"
             >
-              Сообщество
+              Контакты
             </button>
           </div>
 

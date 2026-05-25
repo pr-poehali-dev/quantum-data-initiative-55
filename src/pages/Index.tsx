@@ -1,11 +1,10 @@
 import { LiquidMetalBackground } from "@/components/LiquidMetalBackground"
 import { FloatingNavbar } from "@/components/FloatingNavbar"
 import { ShinyButton } from "@/components/ui/shiny-button"
-import { Feature } from "@/components/ui/feature-with-advantages"
+import { DiscoverSlide } from "@/components/ui/discover-slide"
 import { MoodboardDemo } from "@/components/ui/moodboard-demo"
 import { DashboardSlide } from "@/components/ui/dashboard-slide"
 import { ContactCard } from "@/components/ui/contact-card"
-import { AboutQuote } from "@/components/ui/about-quote"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -16,9 +15,9 @@ import { useEffect, useRef } from "react"
 
 export default function Index() {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const discoverSectionRef = useRef<HTMLDivElement>(null)
   const demoSectionRef = useRef<HTMLDivElement>(null)
   const dashboardSectionRef = useRef<HTMLDivElement>(null)
-  const aboutSectionRef = useRef<HTMLDivElement>(null)
   const contactSectionRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -31,90 +30,42 @@ export default function Index() {
       const containerWidth = scrollContainer.offsetWidth
       const currentSection = Math.round(currentScroll / containerWidth)
 
-      // section 2 — demo
-      if (currentSection === 2 && demoSectionRef.current) {
-        const sec = demoSectionRef.current
-        const isAtTop = sec.scrollTop === 0
-        const isAtBottom = sec.scrollTop + sec.clientHeight >= sec.scrollHeight - 1
-        if (delta > 0 && !isAtBottom) return
-        if (delta < 0 && !isAtTop) return
-        if (delta < 0 && isAtTop) {
-          e.preventDefault()
-          scrollContainer.scrollTo({ left: 1 * containerWidth, behavior: "smooth" })
-          return
-        }
-        if (delta > 0 && isAtBottom) {
-          e.preventDefault()
-          scrollContainer.scrollTo({ left: 3 * containerWidth, behavior: "smooth" })
-          return
-        }
-      }
+      const scrollableSections = [
+        { index: 1, ref: discoverSectionRef, prev: 0, next: 2 },
+        { index: 2, ref: demoSectionRef, prev: 1, next: 3 },
+        { index: 3, ref: dashboardSectionRef, prev: 2, next: 4 },
+        { index: 4, ref: contactSectionRef, prev: 3, next: 4 },
+      ]
 
-      // section 3 — dashboard
-      if (currentSection === 3 && dashboardSectionRef.current) {
-        const sec = dashboardSectionRef.current
-        const isAtTop = sec.scrollTop === 0
-        const isAtBottom = sec.scrollTop + sec.clientHeight >= sec.scrollHeight - 1
-        if (delta > 0 && !isAtBottom) return
-        if (delta < 0 && !isAtTop) return
-        if (delta < 0 && isAtTop) {
-          e.preventDefault()
-          scrollContainer.scrollTo({ left: 2 * containerWidth, behavior: "smooth" })
-          return
-        }
-        if (delta > 0 && isAtBottom) {
-          e.preventDefault()
-          scrollContainer.scrollTo({ left: 4 * containerWidth, behavior: "smooth" })
-          return
-        }
-      }
+      for (const sec of scrollableSections) {
+        if (currentSection === sec.index && sec.ref.current) {
+          const el = sec.ref.current
+          const isAtTop = el.scrollTop === 0
+          const isAtBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1
 
-      // section 4 — about
-      if (currentSection === 4 && aboutSectionRef.current) {
-        const sec = aboutSectionRef.current
-        const isAtTop = sec.scrollTop === 0
-        const isAtBottom = sec.scrollTop + sec.clientHeight >= sec.scrollHeight - 1
-        if (delta > 0 && !isAtBottom) return
-        if (delta < 0 && !isAtTop) return
-        if (delta < 0 && isAtTop) {
-          e.preventDefault()
-          scrollContainer.scrollTo({ left: 3 * containerWidth, behavior: "smooth" })
-          return
-        }
-        if (delta > 0 && isAtBottom) {
-          e.preventDefault()
-          scrollContainer.scrollTo({ left: 5 * containerWidth, behavior: "smooth" })
-          return
-        }
-      }
+          if (delta > 0 && !isAtBottom) return
+          if (delta < 0 && !isAtTop) return
 
-      // section 5 — contact
-      if (currentSection === 5 && contactSectionRef.current) {
-        const sec = contactSectionRef.current
-        const isAtTop = sec.scrollTop === 0
-        const isAtBottom = sec.scrollTop + sec.clientHeight >= sec.scrollHeight - 1
-        if (delta > 0 && !isAtBottom) return
-        if (delta < 0 && !isAtTop) return
-        if (delta < 0 && isAtTop) {
-          e.preventDefault()
-          scrollContainer.scrollTo({ left: 4 * containerWidth, behavior: "smooth" })
-          return
-        }
-        if (delta > 0 && isAtBottom) {
-          e.preventDefault()
-          return
+          if (delta < 0 && isAtTop) {
+            e.preventDefault()
+            scrollContainer.scrollTo({ left: sec.prev * containerWidth, behavior: "smooth" })
+            return
+          }
+          if (delta > 0 && isAtBottom) {
+            e.preventDefault()
+            if (sec.next !== sec.index) {
+              scrollContainer.scrollTo({ left: sec.next * containerWidth, behavior: "smooth" })
+            }
+            return
+          }
         }
       }
 
       e.preventDefault()
-
       if (Math.abs(delta) > 10) {
         let targetSection = currentSection
-        if (delta > 0) {
-          targetSection = Math.min(currentSection + 1, 5)
-        } else {
-          targetSection = Math.max(currentSection - 1, 0)
-        }
+        if (delta > 0) targetSection = Math.min(currentSection + 1, 4)
+        else targetSection = Math.max(currentSection - 1, 0)
         scrollContainer.scrollTo({ left: targetSection * containerWidth, behavior: "smooth" })
       }
     }
@@ -154,11 +105,15 @@ export default function Index() {
           </div>
         </section>
 
-        {/* 1 — Features */}
-        <section id="features" className="flex min-w-full snap-start items-center justify-center px-4 py-20">
-          <div className="mx-auto max-w-7xl w-full">
-            <Feature />
-          </div>
+        {/* 1 — Discover */}
+        <section
+          id="features"
+          ref={discoverSectionRef}
+          className="relative min-w-full snap-start overflow-y-auto px-4 pt-20 pb-6 hide-scrollbar flex items-start justify-center"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        >
+          <div aria-hidden="true" className={cn("absolute inset-0 z-0 size-full pointer-events-none", "bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)]", "bg-[size:12px_12px] opacity-40")} />
+          <div className="relative z-10 w-full"><DiscoverSlide /></div>
         </section>
 
         {/* 2 — Demo */}
@@ -168,17 +123,8 @@ export default function Index() {
           className="relative min-w-full snap-start overflow-y-auto px-4 pt-24 pb-20 hide-scrollbar flex items-start justify-center"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          <div
-            aria-hidden="true"
-            className={cn(
-              "absolute inset-0 z-0 size-full pointer-events-none",
-              "bg-[radial-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)]",
-              "bg-[size:12px_12px] opacity-40",
-            )}
-          />
-          <div className="relative z-10 w-full">
-            <MoodboardDemo />
-          </div>
+          <div aria-hidden="true" className={cn("absolute inset-0 z-0 size-full pointer-events-none", "bg-[radial-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)]", "bg-[size:12px_12px] opacity-40")} />
+          <div className="relative z-10 w-full"><MoodboardDemo /></div>
         </section>
 
         {/* 3 — Dashboard */}
@@ -188,61 +134,17 @@ export default function Index() {
           className="relative min-w-full snap-start overflow-y-auto px-4 pt-24 pb-20 hide-scrollbar flex items-start justify-center"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          <div
-            aria-hidden="true"
-            className={cn(
-              "absolute inset-0 z-0 size-full pointer-events-none",
-              "bg-[radial-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)]",
-              "bg-[size:12px_12px] opacity-40",
-            )}
-          />
-          <div className="relative z-10 w-full">
-            <DashboardSlide />
-          </div>
+          <div aria-hidden="true" className={cn("absolute inset-0 z-0 size-full pointer-events-none", "bg-[radial-gradient(rgba(255,255,255,0.05)_1px,transparent_1px)]", "bg-[size:12px_12px] opacity-40")} />
+          <div className="relative z-10 w-full"><DashboardSlide /></div>
         </section>
 
-        {/* 4 — About */}
-        <section
-          id="about"
-          ref={aboutSectionRef}
-          className="relative min-w-full snap-start overflow-y-auto px-4 pt-24 pb-20 hide-scrollbar"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-        >
-          <div
-            aria-hidden="true"
-            className={cn(
-              "absolute inset-0 z-0 size-full pointer-events-none",
-              "bg-[radial-gradient(rgba(255,255,255,0.1)_1px,transparent_1px)]",
-              "bg-[size:12px_12px] opacity-30",
-            )}
-          />
-          <div className="relative z-10 mx-auto w-full max-w-7xl">
-            <div className="mx-auto mb-10 max-w-2xl text-center">
-              <h1 className="text-4xl font-extrabold tracking-tight lg:text-6xl text-white [text-shadow:_0_4px_20px_rgb(0_0_0_/_60%)] font-open-sans-custom">
-                О нас
-              </h1>
-              <p className="text-gray-300 mt-4 text-sm md:text-base font-open-sans-custom [text-shadow:_0_2px_10px_rgb(0_0_0_/_50%)]">
-                Мы создали Доску настроения для тех, кто строит атмосферу — и хочет, чтобы команда её почувствовала.
-              </p>
-            </div>
-            <AboutQuote />
-          </div>
-        </section>
-
-        {/* 5 — Contact */}
+        {/* 4 — Contact */}
         <section
           id="contact"
           ref={contactSectionRef}
           className="relative min-w-full snap-start overflow-y-auto px-4 pt-24 pb-20"
         >
-          <div
-            aria-hidden="true"
-            className={cn(
-              "absolute inset-0 z-0 size-full pointer-events-none",
-              "bg-[radial-gradient(rgba(255,255,255,0.1)_1px,transparent_1px)]",
-              "bg-[size:12px_12px] opacity-30",
-            )}
-          />
+          <div aria-hidden="true" className={cn("absolute inset-0 z-0 size-full pointer-events-none", "bg-[radial-gradient(rgba(255,255,255,0.1)_1px,transparent_1px)]", "bg-[size:12px_12px] opacity-30")} />
           <div className="relative z-10 mx-auto w-full max-w-5xl mt-[5vh]">
             <ContactCard
               title="Войти в поток"
@@ -255,19 +157,19 @@ export default function Index() {
             >
               <form action="" className="w-full space-y-4">
                 <div className="flex flex-col gap-2">
-                  <Label className="text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] font-open-sans-custom">Имя</Label>
+                  <Label className="text-white font-open-sans-custom">Имя</Label>
                   <Input type="text" className="bg-white/10 border-white/20 text-white placeholder:text-gray-400" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Label className="text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] font-open-sans-custom">Email</Label>
+                  <Label className="text-white font-open-sans-custom">Email</Label>
                   <Input type="email" className="bg-white/10 border-white/20 text-white placeholder:text-gray-400" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Label className="text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] font-open-sans-custom">Телефон</Label>
+                  <Label className="text-white font-open-sans-custom">Телефон</Label>
                   <Input type="tel" className="bg-white/10 border-white/20 text-white placeholder:text-gray-400" />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <Label className="text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)] font-open-sans-custom">Сообщение</Label>
+                  <Label className="text-white font-open-sans-custom">Сообщение</Label>
                   <Textarea className="bg-white/10 border-white/20 text-white placeholder:text-gray-400" />
                 </div>
                 <Button type="submit" className="w-full bg-white text-black hover:bg-gray-100 font-open-sans-custom">
